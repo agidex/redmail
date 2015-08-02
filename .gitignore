@@ -32,3 +32,8 @@ Makefile*
 #QtCtreator Qml
 *.qmlproject.user
 *.qmlproject.user.*
+
+#bild dir
+redmail-build
+redmail-build/*
+dlls
