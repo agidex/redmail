@@ -2,9 +2,8 @@
 #define GRIDWIDGET_H
 
 #include <QWidget>
+#include <cmath>
 
-#include <iostream>
-using namespace std;
 
 class GridWidget : public QWidget
 {
@@ -14,14 +13,18 @@ public:
     ~GridWidget();
     void resizeEvent(QResizeEvent *event);
 
-signals:
-    void onResize();
+    void addWidget(QWidget *widget, unsigned int row, unsigned int col);
+    void clearAll();
 
-public slots:
+    void getGridSize(unsigned int *rows, unsigned int *cols) const;
 
 private:
-//    QList<QPushButton*> *blist;
+    int unsigned maxRows;
+    int unsigned maxCols;
 
+    QList<QWidget*> *widgetList;
+    QList<int> *rowsList;
+    QList<int> *colsList;
 };
 
 #endif // GRIDWIDGET_H

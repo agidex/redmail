@@ -3,78 +3,61 @@
 LinkBrowser::LinkBrowser(GridWidget *widget, QObject *parent) :
     QObject(parent)
 {
-    this->widget = widget;
-    connect(this->widget, SIGNAL(onResize()), this, SLOT(onWidgetResize()));
+    this->gridWidget = widget;
 
-    this->resizeCluster(2, 3);
+    this->resizeCluster(CLUSTER_SIZE_INITIAL);
 }
 
 LinkBrowser::~LinkBrowser()
 {
 }
 
-void LinkBrowser::resizeCluster(unsigned const int rows, unsigned const int cols)
+void LinkBrowser::genRowsCols(int count, int *rows, int *cols)
 {
-    if (rows < 1) {
-        this->rows = 1;
-    }
-    else {
-        this->rows = rows;
-    }
+    int rows_ = 0;
+    int cols_ = 0;
 
-    if (cols < 1) {
-        this->cols = 1;
-    }
-    else {
-        this->cols = cols;
-    }
-
-    for (int i = 0; i < this->cluster.size(); i++) {
-        delete this->cluster[i];
-    }
-    this->cluster.clear();
-
-    int i = 0;
-    for (unsigned int r = 0; r < this->rows; r++) {
-        for (unsigned int c = 0; c < this->cols; c++) {
-
-            QPushButton *b = new QPushButton(this->widget);
-            cluster.append(b);
-
-            cluster[i]->setText(QString::number(i+1));
-            cluster[i]->show();
-            i++;
+    while (rows_ * cols_ < count) {
+        cols_++;
+        if (rows_ * cols_ >= count) {
+            break;
         }
+        rows_++;
     }
-
-    onWidgetResize();
+    *rows = rows_;
+    *cols = cols_;
 }
 
-void LinkBrowser::onWidgetResize()
+void LinkBrowser::resizeCluster(const int size)
 {
-    unsigned int width = floor(this->widget->width() / this->cols);
-    unsigned int heigth = floor(this->widget->height() / this->rows);
+    this->gridWidget->clearAll();
 
-    unsigned int row = 0;
-    unsigned int col = 0;
     for (int i = 0; i < cluster.size(); i++) {
-        int x = col * width;
-        int y = row * heigth;
+        delete cluster[i];
+    }
+    cluster.clear();
 
-        this->cluster[i]->setGeometry(x, y, width, heigth);
+    int rows, cols;
+    this->genRowsCols(size, &rows, &cols);
+
+    int row = 0;
+    int col = 0;
+    for (int i = 0; i < size; i++) {
+        QPushButton *b = new QPushButton(QString::number(i+1), this->gridWidget);
+        cluster.append(b);
+        this->gridWidget->addWidget(b, row, col);
 
         col++;
-        if (col == this->cols) {
+        if (col == cols) {
             col = 0;
             row++;
         }
     }
 }
 
-void LinkBrowser::clusterSize(unsigned int *rows, unsigned int *cols) const
+const int LinkBrowser::clusterSize() const
 {
-    *rows = this->rows;
-    *cols = this->cols;
+    return cluster.size();
 }
 
 

@@ -65,19 +65,15 @@ void RedMail::doitButtonHandler()
 void RedMail::nextLink()
 {
     cout << "next link" << endl;
-    unsigned int rows, cols;
-    this->linkBrowser->clusterSize(&rows, &cols);
-    rows++;
-    cols++;
-    this->linkBrowser->resizeCluster(rows, cols);
+    int size = this->linkBrowser->clusterSize();
+    size++;
+    this->linkBrowser->resizeCluster(size);
 }
 
 void RedMail::prevLink()
 {
     cout << "prev link" << endl;
-    unsigned int rows, cols;
-    this->linkBrowser->clusterSize(&rows, &cols);
-    rows--;
-    cols--;
-    this->linkBrowser->resizeCluster(rows, cols);
+    int size = this->linkBrowser->clusterSize();
+    size--;
+    this->linkBrowser->resizeCluster(size);
 }
