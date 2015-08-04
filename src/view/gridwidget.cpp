@@ -11,6 +11,7 @@ GridWidget::~GridWidget()
 
 void GridWidget::resizeEvent(QResizeEvent *event)
 {
-    emit onResize(this->width(), this->height());
+    emit onResize();
 }
+
 

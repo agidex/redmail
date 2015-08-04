@@ -3,9 +3,6 @@
 
 #include <QWidget>
 
-#include <QPushButton>
-
-#include <cmath>
 #include <iostream>
 using namespace std;
 
@@ -18,11 +15,13 @@ public:
     void resizeEvent(QResizeEvent *event);
 
 signals:
-    void onResize(int w, int h);
+    void onResize();
 
 public slots:
 
 private:
+//    QList<QPushButton*> *blist;
+
 };
 
 #endif // GRIDWIDGET_H

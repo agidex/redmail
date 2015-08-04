@@ -3,17 +3,16 @@
 
 #include <QObject>
 #include <QWidget>
-#include <QGridLayout>
-
-#include <iostream>
+#include <QPushButton>
 
 #include <cmath>
 
 #include "view/gridwidget.h"
 
+#include <iostream>
 using namespace std;
 
-#include <QPushButton>
+typedef QPushButton ViewCell;
 
 class LinkBrowser : public QObject
 {
@@ -22,21 +21,23 @@ public:
     explicit LinkBrowser(GridWidget *widget, QObject *parent = 0);
     ~LinkBrowser();
 
-    void resizeCluster(const int rows, const int cols);
+    void resizeCluster(unsigned const int rows, unsigned const int cols);
+    void clusterSize(unsigned int *rows, unsigned int *cols) const;
+
+//    void resizeCluster(unsigned const int size);
+//    unsigned const int clusterSize() const;
 signals:
 
 public slots:
-    void onWidgetResize(int w, int h);
+    void onWidgetResize();
 
 private:
-    void setGeo(QPushButton *button, int row, int col);
-
     GridWidget *widget;
 
-    QList<QPushButton*> blist;
+    QList<ViewCell*> cluster;
 
-    int rows;
-    int cols;
+    unsigned int rows;
+    unsigned int cols;
 };
 
 #endif // LINKBROWSER_H

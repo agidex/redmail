@@ -4,7 +4,7 @@ LinkBrowser::LinkBrowser(GridWidget *widget, QObject *parent) :
     QObject(parent)
 {
     this->widget = widget;
-    connect(this->widget, SIGNAL(onResize(int,int)), this, SLOT(onWidgetResize(int,int)));
+    connect(this->widget, SIGNAL(onResize()), this, SLOT(onWidgetResize()));
 
     this->resizeCluster(2, 3);
 }
@@ -13,53 +13,70 @@ LinkBrowser::~LinkBrowser()
 {
 }
 
-void LinkBrowser::resizeCluster(const int rows, const int cols)
+void LinkBrowser::resizeCluster(unsigned const int rows, unsigned const int cols)
 {
-    this->rows = rows;
-    this->cols = cols;
-
-    for (int i = 0; i < this->blist.size(); i++) {
-        delete this->blist[i];
+    if (rows < 1) {
+        this->rows = 1;
     }
-    this->blist.clear();
+    else {
+        this->rows = rows;
+    }
+
+    if (cols < 1) {
+        this->cols = 1;
+    }
+    else {
+        this->cols = cols;
+    }
+
+    for (int i = 0; i < this->cluster.size(); i++) {
+        delete this->cluster[i];
+    }
+    this->cluster.clear();
 
     int i = 0;
-    for (int r = 0; r < this->rows; r++) {
-        for (int c = 0; c < this->cols; c++) {
+    for (unsigned int r = 0; r < this->rows; r++) {
+        for (unsigned int c = 0; c < this->cols; c++) {
+
             QPushButton *b = new QPushButton(this->widget);
-            blist.append(b);
-            blist[i]->setText(QString::number(i+1));
-            blist[i]->show();
+            cluster.append(b);
+
+            cluster[i]->setText(QString::number(i+1));
+            cluster[i]->show();
             i++;
         }
     }
-    onWidgetResize(0,0);
+
+    onWidgetResize();
 }
 
-void LinkBrowser::onWidgetResize(int w, int h)
+void LinkBrowser::onWidgetResize()
 {
-    int i = 0;
-    for (int r = 0; r < this->rows; r++) {
-        for (int c = 0; c < this->cols; c++) {
-            setGeo(this->blist[i], r, c);
-            i++;
+    unsigned int width = floor(this->widget->width() / this->cols);
+    unsigned int heigth = floor(this->widget->height() / this->rows);
+
+    unsigned int row = 0;
+    unsigned int col = 0;
+    for (int i = 0; i < cluster.size(); i++) {
+        int x = col * width;
+        int y = row * heigth;
+
+        this->cluster[i]->setGeometry(x, y, width, heigth);
+
+        col++;
+        if (col == this->cols) {
+            col = 0;
+            row++;
         }
     }
 }
 
-void LinkBrowser::setGeo(QPushButton *button, int row, int col)
+void LinkBrowser::clusterSize(unsigned int *rows, unsigned int *cols) const
 {
-    int W = this->widget->width();
-    int H = this->widget->height();
-
-    int width = floor(W / this->cols);
-    int heigth = floor(H / this->rows);
-
-    int x = col * width;
-    int y = row * heigth;
-
-    button->setGeometry(x, y, width, heigth);
+    *rows = this->rows;
+    *cols = this->cols;
 }
+
 
 
 

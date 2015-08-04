@@ -16,16 +16,20 @@ SOURCES += main.cpp\
     items/link2go.cpp \
     list/listmodel.cpp \
     view/linkbrowser.cpp \
-    view/gridwidget.cpp
+    view/gridwidget.cpp \
+    items/email.cpp
 
 HEADERS  += redmail.h \
     list/linkslist.h \
     items/link2go.h \
     list/listmodel.h \
     view/linkbrowser.h \
-    view/gridwidget.h
+    view/gridwidget.h \
+    items/email.h
 
 FORMS    += redmail.ui
+
+
 
 
 

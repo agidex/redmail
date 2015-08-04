@@ -19,7 +19,6 @@ RedMail::RedMail(QWidget *parent) :
     ui->listTableView->resizeColumnToContents(2);
 
     this->linkBrowser = new LinkBrowser(ui->browserWidget);
-//    this->linkBrowser_->setWidget(ui->browserWidget);
 }
 
 RedMail::~RedMail()
@@ -28,12 +27,6 @@ RedMail::~RedMail()
 
     delete this->linksList;
     delete this->linkBrowser;
-
-//    for (int i = 0; i < NBx*NBy; i++) {
-//        delete this->buttons[i];
-//    }
-
-//    delete this->gl_;
 }
 
 void RedMail::bindButtons()
@@ -72,11 +65,19 @@ void RedMail::doitButtonHandler()
 void RedMail::nextLink()
 {
     cout << "next link" << endl;
-    this->linkBrowser->resizeCluster(2,2);
+    unsigned int rows, cols;
+    this->linkBrowser->clusterSize(&rows, &cols);
+    rows++;
+    cols++;
+    this->linkBrowser->resizeCluster(rows, cols);
 }
 
 void RedMail::prevLink()
 {
     cout << "prev link" << endl;
-    this->linkBrowser->resizeCluster(3,3);
+    unsigned int rows, cols;
+    this->linkBrowser->clusterSize(&rows, &cols);
+    rows--;
+    cols--;
+    this->linkBrowser->resizeCluster(rows, cols);
 }
