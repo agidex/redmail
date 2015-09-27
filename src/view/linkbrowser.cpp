@@ -43,7 +43,13 @@ void LinkBrowser::resizeCluster(const int size)
     int row = 0;
     int col = 0;
     for (int i = 0; i < size; i++) {
-        QPushButton *b = new QPushButton(QString::number(i+1), this->gridWidget);
+
+        // testing lol
+//        ViewCell *b = new ViewCell(QString::number(i+1), this->gridWidget);
+        int cellID = i;
+        ViewCell *b = new ViewCell(this->gridWidget, cellID);
+        connect(b, SIGNAL(viewDone(int,int)), this, SLOT(cellDone(int, int)));
+
         cluster.append(b);
         this->gridWidget->addWidget(b, row, col);
 
@@ -59,6 +65,49 @@ const int LinkBrowser::clusterSize() const
 {
     return cluster.size();
 }
+
+void LinkBrowser::doit()
+{
+    Link2Go l2g;
+    l2g.setLink("http://www.google.com");
+    l2g.setInterval(15);
+    l2g.setID(9009);
+
+    cluster[1]->view(l2g);
+
+    Link2Go l2g_;
+    l2g_.setLink("http://www.dobrochan.com");
+    l2g_.setInterval(10);
+
+    cluster[4]->view(l2g_, 5151);
+}
+
+void LinkBrowser::setAuto(bool status)
+{
+    this->autoView = status;
+    if (status) {
+        this->forceStart();
+    }
+}
+
+void LinkBrowser::cellDone(int cellID, int linkID)
+{
+    cout << "DONE: CELL_ID: " << cellID << " LINK_ID: "  << linkID << endl;
+
+    if (this->autoView) {
+        this->cluster[cellID]->view();
+    }
+}
+
+void LinkBrowser::forceStart()
+{
+    for (int i = 0; i < clusterSize(); i++) {
+        if (cluster[i]->isDone()) {
+            cellDone(i, -1);
+        }
+    }
+}
+
 
 
 

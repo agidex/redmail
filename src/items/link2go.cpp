@@ -44,6 +44,16 @@ void Link2Go::setStatus(const int status)
     this->status_ = status;
 }
 
+const int Link2Go::id() const
+{
+    return this->linkID_;
+}
+
+void Link2Go::setID(int id)
+{
+    this->linkID_ = id;
+}
+
 void Link2Go::init(const std::string link, const int interval)
 {
     this->setLink(link);

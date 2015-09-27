@@ -30,6 +30,9 @@ public:
     const int status() const;
     void setStatus(const int status);
 
+    const int id() const;
+    void setID(int id);
+
 //    const int sponsor() const;
 //    void setSponsor(const int sposorID);
 private:
@@ -38,6 +41,8 @@ private:
     std::string link_;
     int interval_;
     int status_;
+
+    int linkID_;
 
 //    int sponsor_;
 };

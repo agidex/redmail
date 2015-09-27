@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     list/listmodel.cpp \
     view/linkbrowser.cpp \
     view/gridwidget.cpp \
-    items/email.cpp
+    items/email.cpp \
+    view/viewcell.cpp
 
 HEADERS  += redmail.h \
     list/linkslist.h \
@@ -25,7 +26,8 @@ HEADERS  += redmail.h \
     list/listmodel.h \
     view/linkbrowser.h \
     view/gridwidget.h \
-    items/email.h
+    items/email.h \
+    view/viewcell.h
 
 FORMS    += redmail.ui
 

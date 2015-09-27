@@ -39,27 +39,29 @@ void RedMail::bindButtons()
 
 void RedMail::doitButtonHandler()
 {
-    Link2Go link1;
-    link1.setLink("google.com");
-    link1.setInterval(10);
-    this->linksList->add(link1);
-    cout << linksList->size() << endl;
+//    ui->webView->load(QUrl("http://google.com"));
+    this->linkBrowser->doit();
+//    Link2Go link1;
+//    link1.setLink("google.com");
+//    link1.setInterval(10);
+//    this->linksList->add(link1);
+//    cout << linksList->size() << endl;
 
 
-    Link2Go link2;
-    link2.setLink("wikipedia.org");
-    link2.setInterval(5);
-    this->linksList->add(link2);
-    cout << linksList->size() << endl;
+//    Link2Go link2;
+//    link2.setLink("wikipedia.org");
+//    link2.setInterval(5);
+//    this->linksList->add(link2);
+//    cout << linksList->size() << endl;
 
 
-    Link2Go link3;
-    link3.setLink("yahoo.com");
-    link3.setInterval(15);
-    this->linksList->add(link3);
-    cout << linksList->size() << endl;
+//    Link2Go link3;
+//    link3.setLink("yahoo.com");
+//    link3.setInterval(15);
+//    this->linksList->add(link3);
+//    cout << linksList->size() << endl;
 
-    ui->listTableView->resizeRowsToContents();
+//    ui->listTableView->resizeRowsToContents();
 }
 
 void RedMail::nextLink()
