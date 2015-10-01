@@ -70,7 +70,6 @@ const int LinkBrowser::clusterSize() const
     return _cluster.size();
 }
 
-
 void LinkBrowser::setAuto(const bool status)
 {
     this->_autoView = status;

@@ -53,7 +53,7 @@ QVariant ListModel::data(const QModelIndex &index, int role) const
 
         switch (index.column()) {
             case 0 : {
-                return QVariant(QString::fromStdString(l2g.link()));
+                return QVariant(l2g.link());
             }
             case 1 : {
                 return QVariant(QString::number(l2g.interval()));

@@ -114,9 +114,9 @@ void ViewCell::view(Link2Go l2g, LinkID linkID)
     this->updateTimeout();
 
     this->_viewProgress->setMaximum(this->_interval);
-    this->_urlLabel->setText(QString::fromStdString(l2g.link()));
+    this->_urlLabel->setText(l2g.link());
 
-    this->_browser->load(checkUrl(QString::fromStdString(l2g.link())));
+    this->_browser->load(checkUrl(l2g.link()));
 }
 
 void ViewCell::loadFinished()

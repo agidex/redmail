@@ -5,7 +5,7 @@ Link2Go::Link2Go()
     this->init("", -1);
 }
 
-Link2Go::Link2Go(const std::string link, const int interval)
+Link2Go::Link2Go(const QString link, const int interval)
 {
     this->init(link, interval);
 }
@@ -14,12 +14,12 @@ Link2Go::~Link2Go()
 {
 }
 
-const std::string Link2Go::link()const
+const QString Link2Go::link()const
 {
     return this->link_;
 }
 
-void Link2Go::setLink(const std::string link)
+void Link2Go::setLink(const QString link)
 {
     this->link_ = link;
 }
@@ -54,7 +54,7 @@ void Link2Go::setStatus(const int status)
 //    this->linkID_ = id;
 //}
 
-void Link2Go::init(const std::string link, const int interval)
+void Link2Go::init(const QString link, const int interval)
 {
     this->setLink(link);
     this->setInterval(interval);

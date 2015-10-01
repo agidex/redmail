@@ -21,12 +21,12 @@ class Link2Go
 {
 public:
     Link2Go();
-    Link2Go(const std::string link, const int interval);
+    Link2Go(const QString link, const int interval);
 
     ~Link2Go();
 
-    const std::string link() const;
-    void setLink(const std::string link);
+    const QString link() const;
+    void setLink(QString link);
 
     const int interval() const;
     void setInterval(const int interval);
@@ -40,9 +40,9 @@ public:
 //    const int sponsor() const;
 //    void setSponsor(const int sposorID);
 private:
-    void init(const std::string link, const int interval);
+    void init(const QString link, const int interval);
 
-    std::string link_;
+    QString link_;
     int interval_;
     int status_;
 
