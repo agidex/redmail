@@ -29,6 +29,8 @@ public slots:
 
 private:
     Link2GoHash _hash;
+//    unique ID of the link
+//    starting from 1
     LinkID _linkIDcounter;
 
     QHash<LinkID, int> _readyList;

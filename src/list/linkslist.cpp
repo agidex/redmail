@@ -3,7 +3,7 @@
 LinksList::LinksList(QObject *parent) :
     QObject(parent)
 {
-    _linkIDcounter = 0;
+    _linkIDcounter = 1;
     _lastReady = 0;
 
     this->_model = new ListModel(&this->_hash);
@@ -27,8 +27,6 @@ void LinksList::addAll(const Link2GoList l2g_list)
 {
     for (unsigned int i = 0; i < l2g_list.size(); i++) {
         this->add(l2g_list.at(i));
-//        _linkIDcounter++;
-//        _hash[_linkIDcounter] = l2g_list.at(i);
     }
     this->update();
 }
@@ -51,11 +49,11 @@ bool LinksList::canNext()
     return true;
 }
 
+//gimme next link
 Link2Go LinksList::next(LinkID *linkID)
 {
     cout << "NEXT" << endl;
     QList<LinkID> keys = _readyList.keys();
-
 
     LinkID link_id = keys.at(_lastReady);
     *linkID = link_id;
@@ -64,14 +62,17 @@ Link2Go LinksList::next(LinkID *linkID)
     return _hash.value(link_id);
 }
 
+//confirm link to view
 void LinksList::ok(LinkID linkID)
 {
     _readyList.remove(linkID);
     _nowList[linkID] = 1337;
     _hash[linkID].setStatus(link2go::ST_VIEW);
+    _lastReady = 0;
     this->update();
 }
 
+//mark link as viewed
 void LinksList::done(LinkID linkID)
 {
     _nowList.remove(linkID);

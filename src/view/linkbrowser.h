@@ -14,6 +14,7 @@
 using namespace std;
 
 #define CLUSTER_SIZE_INITIAL 2
+#define LINK_ID_UNDEF 0
 
 //typedef QPushButton ViewCell;
 

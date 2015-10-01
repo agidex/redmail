@@ -12,16 +12,16 @@
 
 #include "items/link2go.h"
 
-typedef int CellID;
+typedef unsigned int CellID;
 
 class ViewCell : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ViewCell(QWidget *parent = 0, int cellID = -1);
+    explicit ViewCell(QWidget *parent = 0, CellID cellID = 0);
     ~ViewCell();
 
-    void setID(int id);
+//    void setID(int id);
     bool isDone() const;
 
     void view(Link2Go l2g, LinkID linkID);

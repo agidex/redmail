@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-ViewCell::ViewCell(QWidget *parent, int cellID) :
+ViewCell::ViewCell(QWidget *parent, CellID cellID) :
     QWidget(parent)
 {
     this->_cellID = cellID;
@@ -33,10 +33,10 @@ ViewCell::~ViewCell()
     delete this->_vbox;
 }
 
-void ViewCell::setID(int id)
-{
-    this->_cellID = id;
-}
+//void ViewCell::setID(int id)
+//{
+//    this->_cellID = id;
+//}
 
 bool ViewCell::isDone() const
 {

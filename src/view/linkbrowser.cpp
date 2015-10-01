@@ -88,7 +88,7 @@ void LinkBrowser::cellDone(CellID cellID, LinkID linkID)
 {
     cout << "DONE: CELL_ID: " << cellID << " LINK_ID: "  << linkID << endl;
 
-    if (linkID != -1) {
+    if (linkID != LINK_ID_UNDEF) {
         this->_linksList->done(linkID);
     }
     if (this->_autoView) {
@@ -100,7 +100,7 @@ void LinkBrowser::forceStart()
 {
     for (int i = 0; i < clusterSize(); i++) {
         if (_cluster[i]->isDone()) {
-            cellDone(i, -1);
+            cellDone(i, LINK_ID_UNDEF);
         }
     }
 }
@@ -108,6 +108,7 @@ void LinkBrowser::forceStart()
 bool LinkBrowser::checkConditions(Link2Go l2g)
 {
     bool conditions = true;
+
     return conditions;
 }
 
@@ -116,7 +117,7 @@ void LinkBrowser::viewNewLink(CellID cellID)
     bool chozen = false;
 
     while(_linksList->canNext() and !chozen) {
-        cout << "CAN NEXT" << endl;
+//        cout << "CAN NEXT" << endl;
         LinkID linkID;
         Link2Go l2g = _linksList->next(&linkID);
         if (this->checkConditions(l2g)) {
