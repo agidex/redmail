@@ -8,10 +8,12 @@
 #include "view/gridwidget.h"
 #include "view/viewcell.h"
 
+#include "list/linkslist.h"
+
 #include <iostream>
 using namespace std;
 
-#define CLUSTER_SIZE_INITIAL 5
+#define CLUSTER_SIZE_INITIAL 2
 
 //typedef QPushButton ViewCell;
 
@@ -19,27 +21,33 @@ class LinkBrowser : public QObject
 {
     Q_OBJECT
 public:
-    explicit LinkBrowser(GridWidget *gridWidget, QObject *parent = 0);
+    explicit LinkBrowser(GridWidget *_gridWidget, LinksList *list, QObject *parent = 0);
     ~LinkBrowser();
 
     void resizeCluster(const int size);
     const int clusterSize() const;
 
-    void doit();
+    void setAuto(const bool status);
+    bool autoView() const;
 
-    void setAuto(bool status);
 signals:
 
 public slots:
-    void cellDone(int cellID, int linkID);
+    void cellDone(CellID cellID, LinkID linkID);
+    void forceStart();
 
 private:
     void genRowsCols(int count, int *rows, int *cols);
 
-    GridWidget *gridWidget;
-    QVector<ViewCell*> cluster;
+    bool checkConditions(Link2Go l2g);
+    void viewNewLink(CellID cellID);
 
-    bool autoView;
+    LinksList *_linksList;
+
+    GridWidget *_gridWidget;
+    QVector<ViewCell*> _cluster;
+
+    bool _autoView;
 };
 
 #endif // LINKBROWSER_H

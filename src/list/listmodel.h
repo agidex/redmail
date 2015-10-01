@@ -10,7 +10,7 @@ class ListModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit ListModel(Link2GoList *lst, QObject *parent = 0);
+    explicit ListModel(Link2GoHash *hash, QObject *parent = 0);
     ~ListModel();
     void update();
 signals:
@@ -18,7 +18,7 @@ signals:
 public slots:
 
 private:
-    Link2GoList *list_;
+    Link2GoHash *_hash;
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;

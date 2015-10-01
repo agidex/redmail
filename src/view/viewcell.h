@@ -12,6 +12,8 @@
 
 #include "items/link2go.h"
 
+typedef int CellID;
+
 class ViewCell : public QWidget
 {
     Q_OBJECT
@@ -22,9 +24,9 @@ public:
     void setID(int id);
     bool isDone() const;
 
-    void view(Link2Go l2g, int linkID);
+    void view(Link2Go l2g, LinkID linkID);
 signals:
-    void viewDone(int cellID, int linkID);
+    void viewDone(CellID cellID, LinkID linkID);
 
 public slots:
     void loadFinished();
@@ -35,22 +37,24 @@ private:
     void makeUI();
     void updateTimeout();
 
-    int cellID_;
-    bool done_;
-    int linkID_;
+    QUrl checkUrl(QString url);
 
-    int interval_;
-    int intervalDec_;
+    CellID _cellID;
+    bool _done;
+    LinkID _linkID;
 
-    QWebView *browser;
-    QVBoxLayout *vbox;
-    QHBoxLayout *hbox;
-    QProgressBar *viewProgress;
-    QLabel *statLabel;
-    QLabel *urlLabel;
+    int _interval;
+    int _intervalDec;
 
-    QTimer *viewTimer;
-    QTimer *oneSecTimer;
+    QWebView *_browser;
+    QVBoxLayout *_vbox;
+    QHBoxLayout *_hbox;
+    QProgressBar *_viewProgress;
+    QLabel *_statLabel;
+    QLabel *_urlLabel;
+
+    QTimer *_viewTimer;
+    QTimer *_oneSecTimer;
 };
 
 #endif // VIEWCELL_H

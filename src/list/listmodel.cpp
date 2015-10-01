@@ -1,9 +1,9 @@
 #include "listmodel.h"
 
-ListModel::ListModel(Link2GoList *lst, QObject *parent) :
+ListModel::ListModel(Link2GoHash *hash, QObject *parent) :
     QAbstractTableModel(parent)
 {
-    this->list_ = lst;
+    this->_hash = hash;
 }
 
 ListModel::~ListModel()
@@ -17,7 +17,7 @@ void ListModel::update()
 
 int ListModel::rowCount(const QModelIndex &parent) const
 {
-    return this->list_->size();
+    return this->_hash->size();
 }
 
 int ListModel::columnCount(const QModelIndex &parent) const
@@ -48,7 +48,8 @@ QVariant ListModel::headerData(int section, Qt::Orientation orientation, int rol
 QVariant ListModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole) {
-        Link2Go l2g = this->list_->at(index.row());
+        LinkID key = this->_hash->keys().at(index.row());
+        Link2Go l2g = this->_hash->value(key);
 
         switch (index.column()) {
             case 0 : {

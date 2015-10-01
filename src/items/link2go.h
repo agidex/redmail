@@ -4,8 +4,12 @@
 #include <string>
 #include <vector>
 
+#include <QHash>
+
 #include <iostream>
 using namespace std;
+
+typedef int LinkID;
 
 namespace link2go {
     const int ST_READY = 0;
@@ -30,8 +34,8 @@ public:
     const int status() const;
     void setStatus(const int status);
 
-    const int id() const;
-    void setID(int id);
+//    const int id() const;
+//    void setID(int id);
 
 //    const int sponsor() const;
 //    void setSponsor(const int sposorID);
@@ -42,11 +46,12 @@ private:
     int interval_;
     int status_;
 
-    int linkID_;
+//    int linkID_;
 
 //    int sponsor_;
 };
 
 typedef std::vector<Link2Go> Link2GoList;
+typedef QHash<LinkID, Link2Go> Link2GoHash;
 
 #endif // LINK2GO_H

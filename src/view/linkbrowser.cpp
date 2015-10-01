@@ -1,11 +1,14 @@
 #include "linkbrowser.h"
 
-LinkBrowser::LinkBrowser(GridWidget *widget, QObject *parent) :
+LinkBrowser::LinkBrowser(GridWidget *widget, LinksList *list, QObject *parent) :
     QObject(parent)
 {
-    this->gridWidget = widget;
+    this->_gridWidget = widget;
+    this->_linksList = list;
 
     this->resizeCluster(CLUSTER_SIZE_INITIAL);
+
+    this->_autoView = false;
 }
 
 LinkBrowser::~LinkBrowser()
@@ -30,12 +33,12 @@ void LinkBrowser::genRowsCols(int count, int *rows, int *cols)
 
 void LinkBrowser::resizeCluster(const int size)
 {
-    this->gridWidget->clearAll();
+    this->_gridWidget->clearAll();
 
-    for (int i = 0; i < cluster.size(); i++) {
-        delete cluster[i];
+    for (int i = 0; i < _cluster.size(); i++) {
+        delete _cluster[i];
     }
-    cluster.clear();
+    _cluster.clear();
 
     int rows, cols;
     this->genRowsCols(size, &rows, &cols);
@@ -47,11 +50,12 @@ void LinkBrowser::resizeCluster(const int size)
         // testing lol
 //        ViewCell *b = new ViewCell(QString::number(i+1), this->gridWidget);
         int cellID = i;
-        ViewCell *b = new ViewCell(this->gridWidget, cellID);
-        connect(b, SIGNAL(viewDone(int,int)), this, SLOT(cellDone(int, int)));
+        ViewCell *b = new ViewCell(this->_gridWidget, cellID);
 
-        cluster.append(b);
-        this->gridWidget->addWidget(b, row, col);
+        connect(b, SIGNAL(viewDone(CellID, LinkID)), this, SLOT(cellDone(CellID, LinkID)));
+        _cluster.append(b);
+
+        this->_gridWidget->addWidget(b, row, col);
 
         col++;
         if (col == cols) {
@@ -63,47 +67,63 @@ void LinkBrowser::resizeCluster(const int size)
 
 const int LinkBrowser::clusterSize() const
 {
-    return cluster.size();
+    return _cluster.size();
 }
 
-void LinkBrowser::doit()
+
+void LinkBrowser::setAuto(const bool status)
 {
-    Link2Go l2g;
-    l2g.setLink("http://www.google.com");
-    l2g.setInterval(15);
-    l2g.setID(9009);
-
-    cluster[1]->view(l2g);
-
-    Link2Go l2g_;
-    l2g_.setLink("http://www.dobrochan.com");
-    l2g_.setInterval(10);
-
-    cluster[4]->view(l2g_, 5151);
-}
-
-void LinkBrowser::setAuto(bool status)
-{
-    this->autoView = status;
+    this->_autoView = status;
     if (status) {
         this->forceStart();
     }
 }
 
-void LinkBrowser::cellDone(int cellID, int linkID)
+bool LinkBrowser::autoView() const
+{
+    return this->_autoView;
+}
+
+void LinkBrowser::cellDone(CellID cellID, LinkID linkID)
 {
     cout << "DONE: CELL_ID: " << cellID << " LINK_ID: "  << linkID << endl;
 
-    if (this->autoView) {
-        this->cluster[cellID]->view();
+    if (linkID != -1) {
+        this->_linksList->done(linkID);
+    }
+    if (this->_autoView) {
+        viewNewLink(cellID);
     }
 }
 
 void LinkBrowser::forceStart()
 {
     for (int i = 0; i < clusterSize(); i++) {
-        if (cluster[i]->isDone()) {
+        if (_cluster[i]->isDone()) {
             cellDone(i, -1);
+        }
+    }
+}
+
+bool LinkBrowser::checkConditions(Link2Go l2g)
+{
+    bool conditions = true;
+    return conditions;
+}
+
+void LinkBrowser::viewNewLink(CellID cellID)
+{
+    bool chozen = false;
+
+    while(_linksList->canNext() and !chozen) {
+        cout << "CAN NEXT" << endl;
+        LinkID linkID;
+        Link2Go l2g = _linksList->next(&linkID);
+        if (this->checkConditions(l2g)) {
+            chozen = true;
+            this->_linksList->ok(linkID);
+            _cluster[cellID]->view(l2g, linkID);
+            cout << "VIEW: CELL_ID: " << cellID << " LINK_ID: "  << linkID << endl;
         }
     }
 }

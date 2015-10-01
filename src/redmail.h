@@ -24,6 +24,9 @@ public:
 public slots:
     void doitButtonHandler();
 
+    void addLinksButtonHandler();
+    void toogleAutoButtonHandler();
+
     void nextLink();
     void prevLink();
 

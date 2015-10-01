@@ -12,13 +12,15 @@ class LinksList : public QObject
 public:
     explicit LinksList(QObject *parent = 0);
     ~LinksList();
-    void add(const Link2Go link, const int pos = -1);
-    void addAll(const Link2GoList list);
-    void del(const int pos);
-    void delAll(const int posStart, const int posFinish);
 
-    const Link2GoList list();
-    const int size() const;
+    void add(const Link2Go l2g);
+    void addAll(const Link2GoList l2g_list);
+    void del(const LinkID link_ID);
+
+    bool canNext();
+    Link2Go next(LinkID *linkID);
+    void ok(LinkID linkID);
+    void done(LinkID linkID);
 
     ListModel* model() const;
 signals:
@@ -26,8 +28,16 @@ signals:
 public slots:
 
 private:
-    Link2GoList list_;
-    ListModel *model_;
+    Link2GoHash _hash;
+    LinkID _linkIDcounter;
+
+    QHash<LinkID, int> _readyList;
+    int _lastReady;
+
+    QHash<LinkID, int> _nowList;
+    QList<LinkID> _doneList;
+
+    ListModel *_model;
 
     void update();
 };

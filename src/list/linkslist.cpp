@@ -3,54 +3,91 @@
 LinksList::LinksList(QObject *parent) :
     QObject(parent)
 {
-    this->model_ = new ListModel(&this->list_);
+    _linkIDcounter = 0;
+    _lastReady = 0;
+
+    this->_model = new ListModel(&this->_hash);
 }
 
 LinksList::~LinksList()
 {
-    delete this->model_;
+    delete this->_model;
 }
 
-void LinksList::add(const Link2Go link, const int pos)
+void LinksList::add(const Link2Go l2g)
 {
-    this->list_.insert(this->list_.end(), link);
+    _hash[_linkIDcounter] = l2g;
+    _readyList[_linkIDcounter] = 1337;
+
+    _linkIDcounter++;
     this->update();
 }
 
-void LinksList::addAll(const Link2GoList list)
+void LinksList::addAll(const Link2GoList l2g_list)
 {
-    //    add all
+    for (unsigned int i = 0; i < l2g_list.size(); i++) {
+        this->add(l2g_list.at(i));
+//        _linkIDcounter++;
+//        _hash[_linkIDcounter] = l2g_list.at(i);
+    }
     this->update();
 }
 
-void LinksList::del(const int pos)
+void LinksList::del(const LinkID link_ID)
 {
-    this->list_.erase(this->list_.begin()+pos);
+    _hash.remove(link_ID);
     this->update();
 }
 
-void LinksList::delAll(const int posStart, const int posFinish)
+bool LinksList::canNext()
 {
+    if (_readyList.empty()) {
+        return false;
+    }
+    if (_lastReady >= _readyList.size()) {
+        _lastReady = 0;
+        return false;
+    }
+    return true;
 }
 
-const int LinksList::size() const
+Link2Go LinksList::next(LinkID *linkID)
 {
-    return this->list_.size();
+    cout << "NEXT" << endl;
+    QList<LinkID> keys = _readyList.keys();
+
+
+    LinkID link_id = keys.at(_lastReady);
+    *linkID = link_id;
+
+    _lastReady++;
+    return _hash.value(link_id);
 }
 
-const Link2GoList LinksList::list()
+void LinksList::ok(LinkID linkID)
 {
-    return this->list_;
+    _readyList.remove(linkID);
+    _nowList[linkID] = 1337;
+    _hash[linkID].setStatus(link2go::ST_VIEW);
+    this->update();
+}
+
+void LinksList::done(LinkID linkID)
+{
+    _nowList.remove(linkID);
+    _doneList.append(linkID);
+    _hash[linkID].setStatus(link2go::ST_DONE);
+    this->update();
 }
 
 ListModel* LinksList::model() const
 {
-    return this->model_;
+    return this->_model;
 }
 
 void LinksList::update()
 {
-    this->model_->update();
+    this->_model->update();
 }
 
 

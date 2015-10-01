@@ -6,127 +6,146 @@ using namespace std;
 ViewCell::ViewCell(QWidget *parent, int cellID) :
     QWidget(parent)
 {
-    this->cellID_ = cellID;
-    this->done_ = false;
+    this->_cellID = cellID;
+    this->_done = true;
 
     this->makeUI();
 
-    connect(this->browser, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished()));
+    connect(this->_browser, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished()));
 
-    this->viewTimer = new QTimer(this);
-    connect(this->viewTimer, SIGNAL(timeout()), this, SLOT(viewTimeout()));
+    this->_viewTimer = new QTimer(this);
+    connect(this->_viewTimer, SIGNAL(timeout()), this, SLOT(viewTimeout()));
 
-    this->oneSecTimer = new QTimer(this);
-    this->oneSecTimer->setInterval(1000);
-    this->oneSecTimer->setSingleShot(false);
+    this->_oneSecTimer = new QTimer(this);
+    this->_oneSecTimer->setInterval(1000);
+    this->_oneSecTimer->setSingleShot(false);
 
-    connect(this->oneSecTimer, SIGNAL(timeout()), this, SLOT(oneSec()));
+    connect(this->_oneSecTimer, SIGNAL(timeout()), this, SLOT(oneSec()));
 }
 
 ViewCell::~ViewCell()
 {
-    delete this->browser;
-    delete this->viewProgress;
-    delete this->statLabel;
-    delete this->urlLabel;
-    delete this->hbox;
-    delete this->vbox;
+    delete this->_browser;
+    delete this->_viewProgress;
+    delete this->_statLabel;
+    delete this->_urlLabel;
+    delete this->_hbox;
+    delete this->_vbox;
 }
 
 void ViewCell::setID(int id)
 {
-    this->cellID_ = id;
+    this->_cellID = id;
 }
 
 bool ViewCell::isDone() const
 {
-    return this->done_;
+    return this->_done;
 }
 
 void ViewCell::makeUI()
 {
     // ui
-    this->vbox = new QVBoxLayout(this);
+    this->_vbox = new QVBoxLayout(this);
 
-    this->browser = new QWebView(this);
-    this->browser->setUrl(QUrl("about:blank"));
+    this->_browser = new QWebView(this);
+    this->_browser->setUrl(QUrl("about:blank"));
 
-    this->vbox->addWidget(this->browser);
+    this->_vbox->addWidget(this->_browser);
 
-    this->hbox = new QHBoxLayout(this);
+    this->_hbox = new QHBoxLayout(this);
 
-    this->viewProgress = new QProgressBar(this);
-    this->hbox->addWidget(this->viewProgress);
+    this->_viewProgress = new QProgressBar(this);
+    this->_hbox->addWidget(this->_viewProgress);
 
-    this->statLabel = new QLabel(this);
-    this->hbox->addWidget(this->statLabel);
+    this->_statLabel = new QLabel(this);
+    this->_hbox->addWidget(this->_statLabel);
 
-    this->vbox->addLayout(this->hbox);
+    this->_vbox->addLayout(this->_hbox);
 
-    this->urlLabel = new QLabel(this);
-    this->vbox->addWidget(this->urlLabel);
+    this->_urlLabel = new QLabel(this);
+    this->_vbox->addWidget(this->_urlLabel);
 
-    this->viewProgress->setMinimum(0);
-    this->viewProgress->setValue(0);
-    this->statLabel->setText("[0/0]");
-    this->urlLabel->setText("http://www.google.com");
+    this->_viewProgress->setMinimum(0);
+    this->_viewProgress->setValue(0);
+    this->_statLabel->setText("[0/0]");
+    this->_urlLabel->setText("http://www.EXAMPLE.com");
 }
 
 void ViewCell::updateTimeout()
 {
-    this->viewProgress->setValue(this->interval_ - this->intervalDec_);
-    QString statText = "[" + QString::number(this->intervalDec_) + "/" +
-            QString::number(this->interval_) + "]";
-    this->statLabel->setText(statText);
+    this->_viewProgress->setValue(this->_interval - this->_intervalDec);
+    QString statText = "[" + QString::number(this->_intervalDec) + "/" +
+            QString::number(this->_interval) + "]";
+    this->_statLabel->setText(statText);
 }
 
-void ViewCell::view(Link2Go l2g, int linkID)
+QUrl ViewCell::checkUrl(QString url)
 {
-    this->done_ = false;
+    bool https = false;
+    if (url.startsWith("http://")) {
+        url.remove(0, 7);
+    }
+    if (url.startsWith("https://")) {
+        url.remove(0,8);
+        https = true;
+    }
+    if (url.startsWith("www.")) {
+        url.remove(0, 4);
+    }
+    if (https) {
+        return QUrl("https://www."+url);
+    }
+    return QUrl("http://www."+url);
+}
 
-    this->linkID_ = linkID;
+void ViewCell::view(Link2Go l2g, LinkID linkID)
+{
+    this->_done = false;
 
-    this->viewTimer->setInterval(l2g.interval() * 1000);
-    this->viewTimer->setSingleShot(true);
+    this->_linkID = linkID;
 
-    this->interval_ = l2g.interval();
-    this->intervalDec_ = this->interval_;
+    this->_viewTimer->setInterval(l2g.interval() * 1000);
+    this->_viewTimer->setSingleShot(true);
+
+    this->_interval = l2g.interval();
+    this->_intervalDec = this->_interval;
 
     this->updateTimeout();
 
-    this->viewProgress->setMaximum(this->interval_);
-    this->urlLabel->setText(QString::fromStdString(l2g.link()));
+    this->_viewProgress->setMaximum(this->_interval);
+    this->_urlLabel->setText(QString::fromStdString(l2g.link()));
 
-    this->browser->load(QUrl(QString::fromStdString(l2g.link())));
+    this->_browser->load(checkUrl(QString::fromStdString(l2g.link())));
 }
 
 void ViewCell::loadFinished()
 {
     cout << "LOAD FINISHED" << endl;
 
-    this->viewTimer->start();
-    this->oneSecTimer->start();
+    this->_viewTimer->start();
+    this->_oneSecTimer->start();
 }
 
 void ViewCell::viewTimeout()
 {
     cout << "TIMEOUT" << endl;
 
-    this->intervalDec_ = 0;
+    this->_intervalDec = 0;
     this->updateTimeout();
 
-    this->viewTimer->stop();
-    this->oneSecTimer->stop();
-    this->done_ = true;
+    this->_viewTimer->stop();
+    this->_oneSecTimer->stop();
+    this->_done = true;
 
-    emit viewDone(this->cellID_, this->linkID_);
+    emit viewDone(this->_cellID, this->_linkID);
 }
 
 void ViewCell::oneSec()
 {
-    cout << "SECOND" << endl;
+//    cout << "SECOND" << endl;
 
-    this->intervalDec_--;
+    this->_intervalDec--;
 
     this->updateTimeout();
 }
