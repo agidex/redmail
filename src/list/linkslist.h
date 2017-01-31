@@ -8,7 +8,7 @@
 #include "items/link2go.h"
 //#include "list/listmodel.h"
 
-const QString DB_PATH = "e:\\PROG\\c++\\QtProjects\\redmail\\links.db";
+const QString DB_PATH = "links.db";
 
 class LinksList : public QObject
 {
