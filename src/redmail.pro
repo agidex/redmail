@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui webkit
+QT       += core gui webkit sql
 
 TARGET = redmail
 TEMPLATE = app

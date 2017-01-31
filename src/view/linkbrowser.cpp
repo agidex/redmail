@@ -15,7 +15,7 @@ LinkBrowser::~LinkBrowser()
 {
 }
 
-void LinkBrowser::genRowsCols(int count, int *rows, int *cols)
+void LinkBrowser::genRowsCols(const int count, int *rows, int *cols)
 {
     int rows_ = 0;
     int cols_ = 0;
@@ -47,15 +47,13 @@ void LinkBrowser::resizeCluster(const int size)
     int col = 0;
     for (int i = 0; i < size; i++) {
 
-        // testing lol
-//        ViewCell *b = new ViewCell(QString::number(i+1), this->gridWidget);
         int cellID = i;
-        ViewCell *b = new ViewCell(this->_gridWidget, cellID);
+        ViewCell *cell = new ViewCell(this->_gridWidget, cellID);
 
-        connect(b, SIGNAL(viewDone(CellID, LinkID)), this, SLOT(cellDone(CellID, LinkID)));
-        _cluster.append(b);
+        connect(cell, SIGNAL(viewDone(CellID, LinkID)), this, SLOT(cellDone(CellID, LinkID)));
+        _cluster.append(cell);
 
-        this->_gridWidget->addWidget(b, row, col);
+        this->_gridWidget->addWidget(cell, row, col);
 
         col++;
         if (col == cols) {
@@ -78,15 +76,16 @@ void LinkBrowser::setAuto(const bool status)
     }
 }
 
-bool LinkBrowser::autoView() const
+const bool LinkBrowser::autoView() const
 {
     return this->_autoView;
 }
 
-void LinkBrowser::cellDone(CellID cellID, LinkID linkID)
+void LinkBrowser::cellDone(const CellID cellID, const LinkID linkID)
 {
     cout << "DONE: CELL_ID: " << cellID << " LINK_ID: "  << linkID << endl;
 
+    // check initial linkID
     if (linkID != LINK_ID_UNDEF) {
         this->_linksList->done(linkID);
     }
@@ -104,28 +103,41 @@ void LinkBrowser::forceStart()
     }
 }
 
-bool LinkBrowser::checkConditions(Link2Go l2g)
+bool LinkBrowser::checkConditions(const Link2Go l2g)
 {
     bool conditions = true;
 
     return conditions;
 }
 
-void LinkBrowser::viewNewLink(CellID cellID)
+void LinkBrowser::viewNewLink(const CellID cellID)
 {
-    bool chozen = false;
-
-    while(_linksList->canNext() and !chozen) {
-//        cout << "CAN NEXT" << endl;
-        LinkID linkID;
-        Link2Go l2g = _linksList->next(&linkID);
-        if (this->checkConditions(l2g)) {
-            chozen = true;
-            this->_linksList->ok(linkID);
-            _cluster[cellID]->view(l2g, linkID);
-            cout << "VIEW: CELL_ID: " << cellID << " LINK_ID: "  << linkID << endl;
-        }
+    if (_linksList->canNext()) {
+        Link2Go l2g = _linksList->next();
+        LinkID linkID = l2g.id();
+        _linksList->ok(linkID);
+        _cluster[cellID]->view(l2g, linkID);
     }
+
+//    bool chozen/*ONE*/ = false;
+
+//    while(_linksList->canNext() and !chozen) {
+//        LinkID linkID;
+
+
+//        if (_linksList->canNext()) {
+//            Link2Go l2g = _linksList->next();
+//            if (this->checkConditions(l2g)) {
+////                chozen = true;
+//                this->_linksList->ok(linkID);
+//                _cluster[cellID]->view(l2g, linkID);
+//                cout << "VIEW: CELL_ID: " << cellID << " LINK_ID: "  << linkID << endl;
+//            }
+//        }
+//        else {
+////            do nothing
+//        }
+//    }
 }
 
 

@@ -14,7 +14,7 @@
 using namespace std;
 
 #define CLUSTER_SIZE_INITIAL 2
-#define LINK_ID_UNDEF 0
+#define LINK_ID_UNDEF -1
 
 //typedef QPushButton ViewCell;
 
@@ -29,25 +29,27 @@ public:
     const int clusterSize() const;
 
     void setAuto(const bool status);
-    bool autoView() const;
+    const bool autoView() const;
 
 signals:
 
 public slots:
-    void cellDone(CellID cellID, LinkID linkID);
+    void cellDone(const CellID cellID, const LinkID linkID);
     void forceStart();
 
 private:
-    void genRowsCols(int count, int *rows, int *cols);
+    void genRowsCols(const int count, int *rows, int *cols);
 
-    bool checkConditions(Link2Go l2g);
-    void viewNewLink(CellID cellID);
+    bool checkConditions(const Link2Go l2g);
+    void viewNewLink(const CellID cellID);
+
 
     LinksList *_linksList;
 
     GridWidget *_gridWidget;
     QVector<ViewCell*> _cluster;
 
+    // auto view mode
     bool _autoView;
 };
 

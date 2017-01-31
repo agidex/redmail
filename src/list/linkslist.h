@@ -3,8 +3,12 @@
 
 #include <QObject>
 
+#include <QtSql>
+
 #include "items/link2go.h"
-#include "list/listmodel.h"
+//#include "list/listmodel.h"
+
+const QString DB_PATH = "e:\\PROG\\c++\\QtProjects\\redmail\\links.db";
 
 class LinksList : public QObject
 {
@@ -17,31 +21,23 @@ public:
     void addAll(const Link2GoList l2g_list);
     void del(const LinkID link_ID);
 
-    bool canNext();
-    Link2Go next(LinkID *linkID);
-    void ok(LinkID linkID);
-    void done(LinkID linkID);
+    const bool canNext();
+    Link2Go next();
+    void ok(const LinkID linkID);
+    void done(const LinkID linkID);
 
-    ListModel* model() const;
+
+    QSqlTableModel* dbModel() const;
 signals:
 
 public slots:
 
 private:
-    Link2GoHash _hash;
-//    unique ID of the link
-//    starting from 1
-    LinkID _linkIDcounter;
+    QSqlDatabase _linksDb;
 
-    QHash<LinkID, int> _readyList;
-    int _lastReady;
+    QSqlTableModel *_dbModel;
 
-    QHash<LinkID, int> _nowList;
-    QList<LinkID> _doneList;
-
-    ListModel *_model;
-
-    void update();
+    void updateStatus(LinkID linkID, int status);
 };
 
 #endif // LINKSLIST_H

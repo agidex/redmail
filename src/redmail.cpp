@@ -1,6 +1,10 @@
 #include "redmail.h"
 #include "ui_redmail.h"
 
+
+#include <QtSql>
+using namespace std;
+
 #include <QHash>
 
 RedMail::RedMail(QWidget *parent) :
@@ -11,14 +15,18 @@ RedMail::RedMail(QWidget *parent) :
     this->bindButtons();
 
     this->linksList = new LinksList();
-    ui->listTableView->setModel(this->linksList->model());
+    ui->listTableView->setModel(this->linksList->dbModel());
 
     ui->listTableView->verticalHeader()->show();
 
+//    ui->listTableView->setColumnHidden(0, true);
+
     ui->listTableView->resizeRowsToContents();
-    ui->listTableView->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
-    ui->listTableView->resizeColumnToContents(1);
+    ui->listTableView->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
+    ui->listTableView->resizeColumnToContents(0);
     ui->listTableView->resizeColumnToContents(2);
+    ui->listTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->listTableView->verticalHeader()->hide();
 
     this->linkBrowser = new LinkBrowser(ui->browserWidget, this->linksList);
 }
@@ -44,6 +52,51 @@ void RedMail::bindButtons()
 
 void RedMail::doitButtonHandler()
 {
+    linksList->canNext();
+    Link2Go nxt = linksList->next();
+    cout << nxt.id() << "\t" << nxt.link().toStdString() << "\t" << nxt.interval() << endl;
+
+
+//    QString dbPath = "e:\\PROG\\links.db";
+//    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+//    db.setDatabaseName(dbPath);
+//    if (!db.open()) {
+//        qDebug() << "Cant open database";
+//    }
+
+//    QSqlQuery db_query;
+//    bool query_result;
+//    QString str;
+
+//    QString str_insert = "INSERT INTO links(url, time, done) VALUES ('%1', %2, %3)";
+
+//    str = str_insert.arg("pikabu.ru").arg(5).arg(0);
+//    query_result = db_query.exec(str);
+//    str = str_insert.arg("habrahabr.ru").arg(17).arg(0);
+
+//    QString str_select = "SELECT * FROM links";
+//    query_result = db_query.exec(str_select);
+
+//    if (!query_result) {
+//        qDebug() << "Something go wrong";
+//    }
+
+//    QSqlRecord rec = db_query.record();
+//    int id, time, done = 0;
+//    QString url;
+//    while (db_query.next()) {
+//        id = db_query.value(rec.indexOf("LinkID")).toInt();
+//        url = db_query.value(rec.indexOf("url")).toString();
+//        time = db_query.value(rec.indexOf("time")).toInt();
+//        done = db_query.value(rec.indexOf("done")).toInt();
+
+//        cout << id << "\t"
+//             << url.toStdString() << "\t"
+//             << time << "\t"
+//             << done << endl;
+//    }
+
+
 //    ui->webView->load(QUrl("http://google.com"));
 //    this->linkBrowser->doit();
 //    Link2Go link1;
@@ -63,10 +116,10 @@ void RedMail::doitButtonHandler()
 //    Link2Go link3;
 //    link3.setLink("yahoo.com");
 //    link3.setInterval(15);
-//    this->linksList->add(link3);
+//    this->linksList->add(link3);5
 //    cout << linksList->size() << endl;
 
-    ui->listTableView->resizeRowsToContents();
+    //ui->listTableView->resizeRowsToContents();
 }
 
 void RedMail::addLinksButtonHandler()
@@ -74,7 +127,6 @@ void RedMail::addLinksButtonHandler()
     Link2Go l1 = Link2Go("http://www.google.com", 9);
     this->linksList->add(l1);
 
-//    Link2Go l2 = Link2Go("https://en.wikipedia.org/wiki/Main_Page", 5);
     Link2Go l2 = Link2Go("http://stackoverflow.com", 7);
     this->linksList->add(l2);
 

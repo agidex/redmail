@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-ViewCell::ViewCell(QWidget *parent, CellID cellID) :
+ViewCell::ViewCell(QWidget *parent, const CellID cellID) :
     QWidget(parent)
 {
     this->_cellID = cellID;
@@ -32,11 +32,6 @@ ViewCell::~ViewCell()
     delete this->_hbox;
     delete this->_vbox;
 }
-
-//void ViewCell::setID(int id)
-//{
-//    this->_cellID = id;
-//}
 
 bool ViewCell::isDone() const
 {
@@ -80,6 +75,7 @@ void ViewCell::updateTimeout()
     this->_statLabel->setText(statText);
 }
 
+//setting up proper header http://www.example.com or https://www.example.com
 QUrl ViewCell::checkUrl(QString url)
 {
     bool https = false;
@@ -99,7 +95,7 @@ QUrl ViewCell::checkUrl(QString url)
     return QUrl("http://www."+url);
 }
 
-void ViewCell::view(Link2Go l2g, LinkID linkID)
+void ViewCell::view(const Link2Go l2g, const LinkID linkID)
 {
     this->_done = false;
 

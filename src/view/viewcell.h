@@ -18,15 +18,14 @@ class ViewCell : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ViewCell(QWidget *parent = 0, CellID cellID = 0);
+    explicit ViewCell(QWidget *parent = 0, const CellID cellID = 0);
     ~ViewCell();
 
-//    void setID(int id);
     bool isDone() const;
 
-    void view(Link2Go l2g, LinkID linkID);
+    void view(const Link2Go l2g, const LinkID linkID);
 signals:
-    void viewDone(CellID cellID, LinkID linkID);
+    void viewDone(const CellID cellID, const LinkID linkID);
 
 public slots:
     void loadFinished();
