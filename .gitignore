@@ -37,3 +37,5 @@ Makefile*
 redmail-build
 redmail-build/*
 dlls
+#db
+*.db
